@@ -1,0 +1,12 @@
+[{
+  "_id": {
+    "$oid": "67c04889c6e45755896a6f39"
+  },
+  "nama_status": "RAWAT INAP"
+},
+{
+  "_id": {
+    "$oid": "67c0489bc6e45755896a6f3b"
+  },
+  "nama_status": "RAWAT JALAN"
+}]

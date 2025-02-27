@@ -1,0 +1,48 @@
+[{
+  "_id": {
+    "$oid": "67c068e1c6e45755896a6f4a"
+  },
+  "nama": "putra",
+  "nik": "123456",
+  "alamat": "jakarta",
+  "telepon": "081929",
+  "id_status": {
+    "$oid": "67c0489bc6e45755896a6f3b"
+  }
+},
+{
+  "_id": {
+    "$oid": "67c06947c6e45755896a6f4c"
+  },
+  "nama": "ian",
+  "nik": "123",
+  "alamat": "mojolaban",
+  "telepon": "123",
+  "id_status": {
+    "$oid": "67c04889c6e45755896a6f39"
+  }
+},
+{
+  "_id": {
+    "$oid": "67c07218ad90cfa27307edb2"
+  },
+  "nama": "ripal",
+  "nik": "1234",
+  "alamat": "solo",
+  "telepon": "0123",
+  "id_status": {
+    "$oid": "67c04889c6e45755896a6f39"
+  }
+},
+{
+  "_id": {
+    "$oid": "67c0723dad90cfa27307edb4"
+  },
+  "nama": "roni",
+  "nik": "00123",
+  "alamat": "Karanganyar",
+  "telepon": "08129999",
+  "id_status": {
+    "$oid": "67c04889c6e45755896a6f39"
+  }
+}]
