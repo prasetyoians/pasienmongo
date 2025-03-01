@@ -30,7 +30,12 @@
               
             
             <div class="col-8">
+                    
+
       <button class="btn btn-success float-right" onclick="tambah_pasien();" style="margin-top: 25px;"><i class="fa fa-plus"></i> Tambah</button>
+
+      <button class="btn btn-primary float-right mr-1" onclick="list_pasien_restore();" style="margin-top: 25px;"><i class="fa fa-recycle"></i> Restore</button>
+
               
             </div>
           </div>
@@ -49,6 +54,7 @@
                     <th>Alamat</th>
                     <th>telepon</th>
                     <th>Status</th>
+                    <th>Riwayat<br>Penyakit</th>
                  
                     <th>Aksi</th>
                   </tr>
@@ -133,6 +139,78 @@
 
 
 
+ <div class=" modal fade" id="modal_resotre" >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="close-modal text-right mt-3 mr-3"  data-bs-dismiss="modal"><i class="fa fa-times"></i></div>
+                      <div class="container">
+                        <div class="modal-header">
+                          <h5>Restore Pasien</h5>
+                        </div>
+                        <div class="modal-body">
+                          <div class="table_responsive">
+                            <table table class="table table-stripped table-bordered" id="table_restore">
+                              <thead>
+                                <tr>
+                                  <th>No.</th>
+                                  <th>Nama</th>
+                                  <th>NIK</th>
+                                  <th>Alamat</th>
+                                  <th>Telepon</th>
+                                  <th>Status</th>
+                                  <th>Restore</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        
+                    </div>
+                  </div>
+              </div>
+          </div>
+</div>
+
+
+
+ <div class=" modal fade" id="modal_riwayat_pasien" >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="close-modal text-right mt-3 mr-3"  data-bs-dismiss="modal"><i class="fa fa-times"></i></div>
+                      <div class="container">
+                        <div class="modal-header">
+                          <h5>Riwayat Pasien</h5>
+                        </div>
+                        <div class="modal-body">
+                          <div class="table_responsive">
+                            <table table class="table table-stripped table-bordered" id="table_riwayat_pasien">
+                              <thead>
+                                <tr>
+                                  <th>No.</th>
+                                 
+                                  <th>Penyakit</th>
+                                  <th>Diagnosa</th>
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        
+                    </div>
+                  </div>
+              </div>
+          </div>
+</div>
+
+
+
 
 <!-- End of Footer -->
 
@@ -168,6 +246,7 @@
                     { "data": "status" }, 
                  
                  
+                    { "data": "riwayat" }, 
                     { "data": "aksi" }, 
                 ],
                 "order": [[1, 'asc']],
@@ -344,6 +423,163 @@ function delete_pasien(id_pasien){
                              }
                        });
 }
+
+
+
+  function table_restore(){
+    $('#table_restore').DataTable( {
+                "destroy": true, 
+
+            "responsive": true, 
+            "autoWidth": false,
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'GET',
+                "ajax": {
+                      'url':'<?= base_url('/table_restore') ?>',
+                      'data':{
+                         //'id_status':'all',
+                        
+                      }
+                    },
+                "columns": [
+                    { "data": "no" }, 
+                   
+                    { "data": "nama" }, 
+                    { "data": "nik" }, 
+                    { "data": "alamat" }, 
+                    { "data": "telepon" }, 
+                    { "data": "status" }, 
+                 
+                 
+                    { "data": "aksi" }, 
+                ],
+                "order": [[1, 'asc']],
+                "paging":   true,
+                "ordering": true,
+                "info":     true,
+                "filter": true,
+
+                columnDefs: '',
+                select: {
+                  style: 'os',
+                  selector: 'td:first-child'
+                }
+              });
+  }
+
+function list_pasien_restore(){
+  $("#modal_resotre").modal('toggle');
+  $('#table_restore').DataTable().destroy();
+  table_restore();
+}
+
+
+
+function restore_pasien(id_pasien){
+
+           $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content') // Ambil token dari meta tag
+                }
+            });
+    swal({
+            title: 'Apa kamu yakin untuk me-restore pasien?',
+            text: "Data  akan  dikembalikan lagi ",
+            type: 'warning',
+            icon:"warning",
+            buttons:{
+              confirm: {
+                text : 'Yes!',
+                className : 'btn btn-success'
+              },
+              cancel: {
+                visible: true,
+                className: 'btn btn-danger'
+              }
+            }
+          }).then((Delete) => {
+            if (Delete) {
+
+        $.ajax({
+          url:"<?= base_url('/restore_pasien/') ?>"+id_pasien,
+          method:"POST",
+          dataType:"JSON",
+          success:function(json){
+              
+                swal({
+                      title: "Restore pasien!",
+                     text: "aksi restore berhasil!",
+                     icon: "success"
+                     });
+
+
+                 var filter = $("#filter option:selected").val();
+                 $('#table_restore').DataTable().destroy();
+                 table_restore(filter);
+
+                  $('#table_pasien').DataTable().destroy();
+                 table_pasien(filter);
+
+                     $('meta[name="csrf_token"]').attr('content',json.csrf_hash); 
+             
+                    }
+                  })
+
+
+                } else {
+                               swal.close();
+                             }
+                       });
+}
+
+
+
+
+  function table_riwayat_pasien(id_pasien){
+    $('#table_riwayat_pasien').DataTable( {
+            "destroy": true, 
+            "responsive": true, 
+            "autoWidth": false,
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'GET',
+                "ajax": {
+                      'url':'<?= base_url('/table_riwayat_pasien') ?>',
+                      'data':{
+                         'id_pasien':id_pasien,
+                        
+                      }
+                    },
+                "columns": [
+                    { "data": "no" }, 
+                  
+                    { "data": "penyakit" }, 
+                    { "data": "diagnosa" }, 
+
+                ],
+                "order": [[1, 'asc']],
+                "paging":   true,
+                "ordering": true,
+                "info":     true,
+                "filter": true,
+                columnDefs: '',
+                select: {
+                  style: 'os',
+                  selector: 'td:first-child'
+                }
+              });
+  }
+
+
+  function riwayat_pasien(id_pasien){
+  $("#modal_riwayat_pasien").modal('toggle');
+  $('#table_riwayat_pasien').DataTable().destroy();
+  table_riwayat_pasien(id_pasien);
+}
+
+
+
 
 
 </script>
